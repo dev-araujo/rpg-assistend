@@ -1,5 +1,8 @@
 # Dependencies
 node_modules/
+
+# Modelos de embedding locais (baixados automaticamente)
+backend/.models/
 /jspm_packages/
 
 # Production Build Output
@@ -62,3 +65,4 @@ coverage
 # Other build artifacts
 lib-cov
 target
+venv

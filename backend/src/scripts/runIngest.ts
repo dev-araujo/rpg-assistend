@@ -1,40 +1,23 @@
-import { ingestPdf } from "../services/ingest.service.js";
-import path from "path";
-import { fileURLToPath } from "url";
+import { IngestService } from "../services/ingest.service";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+async function runIngest() {
+  console.log("=".repeat(50));
+  console.log("🧙 ORÁCULO D&D - SISTEMA DE INGESTÃO");
+  console.log("=".repeat(50));
 
-const runIngest = async () => {
-  console.log("Starting the ingestion process for D&D library...\n");
+  const ingestService = new IngestService();
 
-  const dataPath = path.resolve(__dirname, "../../../data");
+  console.log("\n📂 Procurando PDFs na pasta data...");
 
   try {
-    const phbDocs = await ingestPdf(`${dataPath}/players_handbook-5.pdf`, {
-      edition: "5e",
-      book: "players_handbook",
-      type: "rules",
-    });
-    const mmDocs = await ingestPdf(`${dataPath}/monster_manual-5.pdf`, {
-      edition: "5e",
-      book: "monster_manual",
-      type: "bestiary",
-    });
+    await ingestService.processAllPDFs();
 
-    const dmgDocs = await ingestPdf(`${dataPath}/dungeon_masters_guide-5.pdf`, {
-      edition: "5e",
-      book: "dungeon_masters_guide",
-      type: "rules",
-    });
-
-    console.log(
-      `Total chunks ready for database: ${phbDocs.length + mmDocs.length + dmgDocs.length}`,
-    );
-    console.log("All books have been successfully processed!");
+    console.log("\n" + "=".repeat(50));
+    console.log("✅ INGESTÃO CONCLUÍDA COM SUCESSO!");
+    console.log("=".repeat(50));
   } catch (error) {
-    console.error("Error during ingestion:", error);
+    console.error("\n❌ Erro durante a ingestão:", error);
   }
-};
+}
 
-runIngest();
+runIngest().catch(console.error);
